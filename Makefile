@@ -80,7 +80,7 @@ flash: $(TARGET)
 		-c "program $(TARGET) verify reset exit"
 
 clean:
-	$(RM) -r $(BUILD_DIR)
+	@$(RM) -rf $(BUILD_DIR)
 
 cppcheck:
 	@$(CPPCHECK) \
