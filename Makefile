@@ -9,12 +9,13 @@ OPENOCD_DIR = C:/Users/Ryan/dev_tools/xpack-openocd/xpack-openocd-0.12.0-7/openo
 
 LIB_DIRS = $(ARMGCC_INCLUDE_DIR)
 INCLUDE_DIRS = $(ARMGCC_INCLUDE_DIR) \
-	       ./src \
+	       ./src
 
 
 # Toolchain
 CC = $(ARMGCC_BIN_DIR)/arm-none-eabi-gcc.exe
 RM = rm
+CPPCHECK = cppcheck
 
 # Files
 TARGET = $(BIN_DIR)/blink
@@ -39,6 +40,12 @@ MCU = -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 WFLAGS = -Wall -Wextra -Werror -Wshadow 
 CFLAGS = $(MCU) $(WFLAGS) $(addprefix -I, $(INCLUDE_DIRS)) -Og -g -DSTM32L476xx 
 LDFLAGS = $(MCU) -T$(LINKER) -nostartfiles -nostdlib 
+CPPCHECK_FLAGS = --quiet --enable=all --error-exitcode=1 --inline-suppr \
+		 -DSTM32L476xx \
+		 -D__GNUC__ \
+		 --suppress=missingIncludeSystem \
+		 --check-config
+CPPCHECK_INCLUDES = $(addprefix -I, $(shell cygpath -u "$(ARMGCC_INCLUDE_DIR)") ./src)
 
 # Build
 ## Linking
@@ -56,7 +63,7 @@ $(STARTUP_OBJ): $(STARTUP_SRC)
 	$(CC) $(CFLAGS) -c -o $(STARTUP_OBJ) $(STARTUP_SRC) 
 
 # Phonies
-.PHONY: all clean flash
+.PHONY: all clean flash cppcheck
 
 all: $(TARGET)
 
@@ -67,3 +74,9 @@ flash: $(TARGET)
 
 clean:
 	$(RM) -r $(BUILD_DIR)
+
+cppcheck:
+	@$(CPPCHECK) \
+		$(CPPCHECK_FLAGS) \
+		$(CPPCHECK_INCLUDES) \
+		$(SOURCES) 
