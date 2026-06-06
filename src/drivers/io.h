@@ -21,7 +21,13 @@ typedef enum {
     IO_MODE_ANALOG
 } io_mode;
 
+typedef enum {
+    IO_OTYPE_PP, // Output Push-Pull
+    IO_OTYPE_OD // Output Open-Drain
+} io_otype;
+
 void io_enable_clock(io_port port);
 void io_set_mode(io_port port, uint8_t pin, io_mode mode);
+void io_set_otype(io_port port, uint8_t, io_otype otype);
 
 #endif // __IO_H_
