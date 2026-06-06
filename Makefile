@@ -27,13 +27,19 @@ LINKER = $(ARMGCC_INCLUDE_DIR)/STM32L476RGTX.ld
 OPENOCD_IF = $(OPENOCD_DIR)/interface/stlink.cfg
 OPENOCD_TGT = $(OPENOCD_DIR)/target/stm32l4x.cfg
 
-# New source files added here
+SOURCES_WITH_HEADERS = \
+	src/drivers/led.c \
+	src/common/utils.c \
+	
 SOURCES = src/main.c \
-	  src/common/utils.c \
-	  src/drivers/led.c
+	 $(SOURCES_WITH_HEADERS)
+
+HEADERS = \
+	  $(SOURCES_WITH_HEADERS:.c=.h) \
+
 
 OBJECT_NAMES = $(SOURCES:.c=.o)
-OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(OBJECT_NAMES))
+OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(OBJECT_NAMES)) $(STARTUP_OBJ)
 
 
 # Flags
@@ -50,7 +56,7 @@ CPPCHECK_INCLUDES = $(addprefix -I, $(shell cygpath -u "$(ARMGCC_INCLUDE_DIR)") 
 
 # Build
 ## Linking
-$(TARGET): $(OBJECTS) $(STARTUP_OBJ)
+$(TARGET): $(OBJECTS) $(HEADERS)
 	@mkdir -p $(dir $@)
 	$(CC) $(LDFLAGS) $^ -o $@
 
@@ -83,4 +89,4 @@ cppcheck:
 		$(SOURCES)
 
 format:
-	@$(FORMAT) -i $(SOURCES)
+	@$(FORMAT) -i $(SOURCES) $(HEADERS)
