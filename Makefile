@@ -16,6 +16,7 @@ INCLUDE_DIRS = $(ARMGCC_INCLUDE_DIR) \
 CC = $(ARMGCC_BIN_DIR)/arm-none-eabi-gcc.exe
 RM = rm
 CPPCHECK = cppcheck
+FORMAT = clang-format
 
 # Files
 TARGET = $(BIN_DIR)/blink
@@ -63,7 +64,7 @@ $(STARTUP_OBJ): $(STARTUP_SRC)
 	$(CC) $(CFLAGS) -c -o $(STARTUP_OBJ) $(STARTUP_SRC) 
 
 # Phonies
-.PHONY: all clean flash cppcheck
+.PHONY: all clean flash cppcheck format
 
 all: $(TARGET)
 
@@ -79,4 +80,7 @@ cppcheck:
 	@$(CPPCHECK) \
 		$(CPPCHECK_FLAGS) \
 		$(CPPCHECK_INCLUDES) \
-		$(SOURCES) 
+		$(SOURCES)
+
+format:
+	@$(FORMAT) -i $(SOURCES)
