@@ -6,6 +6,8 @@
 void led_init(void)
 {
     // Enable GPIO Port A Clock
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+
     // Set PA5 (Built in LED) to General purpose Output (01)
     GPIOA->MODER &= ~GPIO_MODER_MODE5;
     GPIOA->MODER |= GPIO_MODER_MODE5_0;

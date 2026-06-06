@@ -11,9 +11,6 @@
 int main(void)
 {
 
-    // 1. Enable Clock for GPIOA (AHB2 peripheral clock enable register)
-    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
-
     led_init();
     while (1) {
         led_toggle();
