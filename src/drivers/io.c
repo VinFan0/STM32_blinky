@@ -15,3 +15,12 @@ void io_set_mode(io_port port, uint8_t pin, io_mode mode)
     gpio->MODER &= ~(0x3UL << (pin * 2)); // Clear 2 bits of MODE(pin)
     gpio->MODER |= (mode << (pin * 2)); // Set desired mode to MODE(pin)
 }
+
+void io_set_otype(io_port port, uint8_t pin, io_otype otype)
+{
+    // TODO: Assert pin within [15:0]
+    GPIO_TypeDef *gpio = (GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE) * port);
+
+    gpio->OTYPER &= ~(0x1UL << pin);
+    gpio->OTYPER |= (otype << pin);
+}
