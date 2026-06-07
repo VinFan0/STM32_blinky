@@ -34,3 +34,11 @@ void io_set_ospeed(io_port port, uint8_t pin, io_ospeed ospeed)
     gpio->OSPEEDR &= ~(0x3UL << (pin << 1)); // Clear 2 bits of OSPEED(pin)
     gpio->OSPEEDR |= (ospeed << (pin << 1)); // Set desired ospeed to OSPEED(pin)
 }
+
+void io_set_pupdr(io_port port, uint8_t pin, io_pupd pupd)
+{
+    GPIO_TypeDef *gpio = (GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE) * port);
+
+    gpio->PUPDR &= ~(0x3UL << (pin << 1));
+    gpio->PUPDR |= (pupd << (pin << 1));
+}
