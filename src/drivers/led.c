@@ -1,16 +1,17 @@
 
 #include "stm32l476xx.h"
-#include "led.h"
-#include "common/utils.h"
+#include "drivers/led.h"
+#include "drivers/io.h"
 
 void led_init(void)
 {
+    // On the Nucleo-L476RG dev board, the built in LED is on PA5
+    //
     // Enable GPIO Port A Clock
-    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+    io_enable_clock(IO_PORT_A);
 
     // Set PA5 (Built in LED) to General purpose Output (01)
-    GPIOA->MODER &= ~GPIO_MODER_MODE5;
-    GPIOA->MODER |= GPIO_MODER_MODE5_0;
+    io_set_mode(IO_PORT_A, 5, IO_MODE_OUTPUT);
 
     // OPTIONAL: Configure as Push-Pull (default is Push-Pull)
     GPIOA->OTYPER &= ~GPIO_OTYPER_OT5;

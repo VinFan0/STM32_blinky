@@ -1,0 +1,17 @@
+#include <stm32l476xx.h>
+#include "drivers/io.h"
+
+void io_enable_clock(io_port port)
+{
+    RCC->AHB2ENR |= 0X1UL << port;
+}
+
+void io_set_mode(io_port port, uint8_t pin, io_mode mode)
+{
+    // GPIO_TypeDef defined in stm32l476xx.h
+    // Stride through memory to find correct GPIO port base address
+    GPIO_TypeDef *gpio = (GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE) * port);
+
+    gpio->MODER &= ~(0x3UL << (pin * 2)); // Clear 2 bits of MODE(pin)
+    gpio->MODER |= (mode << (pin * 2)); // Set desired mode to MODE(pin)
+}
