@@ -34,29 +34,28 @@ typedef enum {
 } io_ospeed;
 
 typedef enum {
-    IO_PUPDR_NONE, // bits 00
-    IO_PUPDR_PU, // bits 01
-    IO_PUPDR_PD // bits 10
+    IO_PUPD_NONE, // bits 00 IO_PUPDR_PU, // bits 01
+    IO_PUPD_PD // bits 10
     // bits 11: Reserved
 } io_pupd;
 
 typedef enum {
-    AF0,
-    AF1,
-    AF2,
-    AF3,
-    AF4,
-    AF5,
-    AF6,
-    AF7,
-    AF8,
-    AF9,
-    AF10,
-    AF11,
-    AF12,
-    AF13,
-    AF14,
-    AF15
+    IO_AF0,
+    IO_AF1,
+    IO_AF2,
+    IO_AF3,
+    IO_AF4,
+    IO_AF5,
+    IO_AF6,
+    IO_AF7,
+    IO_AF8,
+    IO_AF9,
+    IO_AF10,
+    IO_AF11,
+    IO_AF12,
+    IO_AF13,
+    IO_AF14,
+    IO_AF15
 } io_afr;
 
 typedef enum {

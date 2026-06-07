@@ -31,6 +31,7 @@ SOURCES_WITH_HEADERS = \
 	src/drivers/led.c \
 	src/common/utils.c \
 	src/drivers/io.c \
+	src/drivers/uart.c \
 	
 SOURCES = src/main.c \
 	 $(SOURCES_WITH_HEADERS)
