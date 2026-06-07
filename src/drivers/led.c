@@ -18,7 +18,6 @@ void led_init(void)
 
     // OPTIONAL: Set Output speed to High
     io_set_ospeed(IO_PORT_A, 5, IO_OSPEED_LOW);
-    // GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEED5;
 }
 
 void led_toggle(void)
