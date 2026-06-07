@@ -37,8 +37,41 @@ void io_set_ospeed(io_port port, uint8_t pin, io_ospeed ospeed)
 
 void io_set_pupdr(io_port port, uint8_t pin, io_pupd pupd)
 {
+    // TODO: Assert pin within [15:0]
     GPIO_TypeDef *gpio = (GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE) * port);
 
     gpio->PUPDR &= ~(0x3UL << (pin << 1));
     gpio->PUPDR |= (pupd << (pin << 1));
+}
+
+void io_set_afr(io_port port, uint8_t pin, io_afr afr)
+{
+
+    // TODO: Assert pin within [15:0]
+    GPIO_TypeDef *gpio = (GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE) * port);
+
+    if (pin <= 7) {
+        gpio->AFR[0] &= ~(0x15UL << (pin << 2)); // Clear 4 bits of AFRL(pin)
+        gpio->AFR[0] |= (afr << (pin << 2)); // Set desired afr to AFRL(pin)
+    } else if (pin <= 15) {
+        gpio->AFR[1] &= ~(0x15UL << (pin << 2)); // Clear 4 bits of AFRH(pin)
+        gpio->AFR[1] |= (afr << (pin << 2)); // Set desired afr to AFRH(pin)
+    }
+}
+
+void io_set_analag_switch_control(io_port port, uint8_t pin, io_ascr ascr)
+{
+
+    /* NOTE: This bit must be set prior to ADC conversion.
+     * ***********************************************************
+     * Only the IO which connect to the ADC input are effective. Other
+     * IOs must keep their reset value.
+     */
+
+    // TODO: Assert pin within [15:0]
+    // TODO: Assert port within A to H
+    GPIO_TypeDef *gpio = (GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE) * port);
+
+    gpio->ASCR &= ~(0x1UL << pin); // Clear bit of ASCR(pin)
+    gpio->ASCR |= (ascr << pin); // Set desired ascr to ASCR(pin)
 }
