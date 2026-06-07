@@ -40,10 +40,36 @@ typedef enum {
     // bits 11: Reserved
 } io_pupd;
 
+typedef enum {
+    AF0,
+    AF1,
+    AF2,
+    AF3,
+    AF4,
+    AF5,
+    AF6,
+    AF7,
+    AF8,
+    AF9,
+    AF10,
+    AF11,
+    AF12,
+    AF13,
+    AF14,
+    AF15
+} io_afr;
+
+typedef enum {
+    IO_ASCR_DISCONNECT,
+    IO_ASCR_CONNECT
+} io_ascr;
+
 void io_enable_clock(io_port port);
 void io_set_mode(io_port port, uint8_t pin, io_mode mode);
 void io_set_otype(io_port port, uint8_t pin, io_otype otype);
 void io_set_ospeed(io_port port, uint8_t pin, io_ospeed ospeed);
 void io_set_pupdr(io_port port, uint8_t pin, io_pupd pupd);
+void io_set_afr(io_port port, uint8_t pin, io_afr afr);
+void io_set_analag_switch_control(io_port port, uint8_t pin, io_ascr ascr);
 
 #endif // __IO_H_
