@@ -14,7 +14,8 @@ void led_init(void)
     io_set_mode(IO_PORT_A, 5, IO_MODE_OUTPUT);
 
     // OPTIONAL: Configure as Push-Pull (default is Push-Pull)
-    GPIOA->OTYPER &= ~GPIO_OTYPER_OT5;
+    io_set_otype(IO_PORT_A, 5, IO_OTYPE_PP);
+    // GPIOA->OTYPER &= ~GPIO_OTYPER_OT5;
 
     // OPTIONAL: Set Output speed to High
     GPIOA->OSPEEDR |= GPIO_OSPEEDR_OSPEED5;

@@ -8,6 +8,8 @@ void io_enable_clock(io_port port)
 
 void io_set_mode(io_port port, uint8_t pin, io_mode mode)
 {
+    // TODO: Assert pin within [15:0] & Mode 0-3
+
     // GPIO_TypeDef defined in stm32l476xx.h
     // Stride through memory to find correct GPIO port base address
     GPIO_TypeDef *gpio = (GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE) * port);
