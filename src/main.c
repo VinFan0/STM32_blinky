@@ -6,7 +6,7 @@
 #include "drivers/led.h"
 
 #define LED_PIN (5)
-#define DELAY_COUNT (500) // blink interval in milliseconds
+#define DELAY_COUNT (250) // blink interval in milliseconds
 
 int main(void)
 {
