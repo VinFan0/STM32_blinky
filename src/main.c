@@ -8,14 +8,21 @@
 #include "drivers/io.h"
 
 #define LED_PIN (5)
-#define DELAY_COUNT (250) // blink interval in milliseconds
+#define DELAY_COUNT (500) // blink interval in milliseconds
 
 int main(void)
 {
 
     led_init();
     uart_init();
+
     while (1) {
+        while (uart_data_available()) {
+            char c = uart_read_char();
+            uart_send_char(c);
+            uart_transmit("\r\n");
+        }
+
         led_toggle();
 
         uart_transmit("Sending test string!\r\n");
