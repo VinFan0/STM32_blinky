@@ -14,7 +14,7 @@ The on-board LD2 LED blinks at a constant rate, determined by the `DELAY_COUNT` 
 ### UART Message Transmit
 The string `"Sending test string!\r\n"` is transmitted by USART2 through the virtual ST-Link virtual COM port. To view the message open a serial terminal such as [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) on Windows, and configure it to your specific COM port used by the STLink Virtual COM port. The default baud rate of the `Blinky` project is `115200`, which can be configured in `src/drivers/uart.c`.
 
-## UART Message Receive
+### UART Message Receive
 Entering single keys into the same serial terminal in which the test message is sent, will send the keys to the board. The board they echos the keys back out to the serial terminal.
 
 ## Directory Structure
