@@ -15,7 +15,6 @@ int main(void)
 
     led_init();
     uart_init();
-
     while (1) {
         while (uart_data_available()) {
             char c = uart_read_char();
