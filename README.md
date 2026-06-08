@@ -1,6 +1,21 @@
 # STM32 Blinky
 This repository serves as a starting point for bare-metal C projects. The directory structure,
-build system, guidelines, and other specifics are inspired by the [Embedded System Project Series](https://www.youtube.com/watch?v=g9KbXJydf8I&list=PLS_iNJJVTtiRV0DZRDcTHnvAuDrKGPN40) from [Artful Bytes](artfulbytes.com).
+build system, guidelines, and other specifics are inspired by the [Embedded System Project Series](https://www.youtube.com/watch?v=g9KbXJydf8I&list=PLS_iNJJVTtiRV0DZRDcTHnvAuDrKGPN40) from [Artful Bytes](artfulbytes.com). The `Blinky` project also serves as an example/test project for the Nucleo-L476RG development board.
+
+## Example and Testing Features
+The project holds the following features, which can be used to verify proper functionality of the board.
+- LED Blink
+- UART message transmit
+- UART message receive
+
+### LED Blink
+The on-board LD2 LED blinks at a constant rate, determined by the `DELAY_COUNT` macro defined in `src/main.c`.
+
+### UART Message Transmit
+The string `"Sending test string!\r\n"` is transmitted by USART2 through the virtual ST-Link virtual COM port. To view the message open a serial terminal such as [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) on Windows, and configure it to your specific COM port used by the STLink Virtual COM port. The default baud rate of the `Blinky` project is `115200`, which can be configured in `src/drivers/uart.c`.
+
+## UART Message Receive
+Entering single keys into the same serial terminal in which the test message is sent, will send the keys to the board. The board they echos the keys back out to the serial terminal.
 
 ## Directory Structure
 The directory structure is based on the
@@ -26,7 +41,7 @@ and IDE could also be used for step debugging.
 ## make (Makefile)
 The code targets the STM32L476RGTx (Nucleo-L476RG development board) and must be built
 with a cross-toolchain. The toolchain used for this project is arm-none-eabi-gcc, which
-is included in the repository under 'tools/'. The toolchain can also be found
+is included in the repository under `tools/`. The toolchain can also be found
 on [Arm's website](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain)
 
 There is a _Makefile_ to build the code with _make_ from the command-line.
@@ -51,7 +66,7 @@ These are teh typical steps take for each change
 ## Commit Message
 Commit messages should follow the specification laid out by [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
-## **TODO** Code Formatter
+## Code Formatter
 The codebase follows certain formatting rules, which are enforced by the code formatter **clang-format**. These rules are specified in teh **.clang-format** located in the root directory. There is a rule in the **Makefile** to format all source files with one command (requires clang-format to be installed).
 ``` Bash
 make format
@@ -77,4 +92,4 @@ make cppcheck
 ```
 
 ## Things to include per project
-Each project should include several items of documentation, diagrams, and outlines. These items include hardware schematics, software architecture, block diagrams, and state machines.
+This project can be used as a template for starting new projects. Each new project should include several items of documentation, diagrams, and outlines. These items include hardware schematics, software architecture, block diagrams, and state machines.
