@@ -26,3 +26,11 @@ void delay_ms(volatile uint32_t ms)
                          : "+r"(count));
     }
 }
+
+uint8_t my_strlen(const char *s)
+{
+    uint8_t i = 0;
+    while (s[i] != '\0')
+        i++;
+    return i;
+}
