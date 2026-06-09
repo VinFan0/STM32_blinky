@@ -7,6 +7,7 @@ The project holds the following features, which can be used to verify proper fun
 - LED Blink
 - UART message transmit
 - UART message receive
+- LCD character display
 
 ### LED Blink
 The on-board LD2 LED blinks at a constant rate, determined by the `DELAY_COUNT` macro defined in `src/main.c`.
@@ -17,9 +18,11 @@ The string `"Sending test string!\r\n"` is transmitted by USART2 through the vir
 ### UART Message Receive
 Entering single keys into the same serial terminal in which the test message is sent, will send the keys to the board. The board they echos the keys back out to the serial terminal.
 
+### LCD Character Display
+Connect a 16x2 character LCD compatible with a HD44780 controller, such as the [QAPASS 1602A](https://www.digikey.com/en/products/detail/midas-displays/MD21605G12W3-BNMLW-VE/13970969?s=N4IgTCBcDaILYBMwEYBsAGArAc2WA7gMwgC6AvkA), to demonstrate the `Blinky` project LCD driver feature. The connections for the LCD are detailed in the diagram below. In addition to the `Hello World!` test message, characters received from the UART are also printed on the second line. **TODO: MAKE LCD DIAGRAM**
+
 ## Directory Structure
-The directory structure is based on the
-[pitchfork layout](https://github.com/vector-of-bool/pitchfork).
+The directory structure is based on the [pitchfork layout](https://github.com/vector-of-bool/pitchfork).
 
 | Directory     | Description                                                   |
 |---------------|---------------------------------------------------------------|
