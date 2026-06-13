@@ -3,7 +3,14 @@ This repository serves as a starting point for bare-metal C projects. The direct
 build system, guidelines, and other specifics are inspired by the [Embedded System Project Series](https://www.youtube.com/watch?v=g9KbXJydf8I&list=PLS_iNJJVTtiRV0DZRDcTHnvAuDrKGPN40) from [Artful Bytes](artfulbytes.com). The `Blinky` project also serves as an example/test project for the Nucleo-L476RG development board.
 
 ## Example and Testing Features
-The project holds the following features, which can be used to verify proper functionality of the board.
+The project holds the following features, which can be used to verify proper functionality of the board. Not every feature has to be enabled for testing and demonstration. To enable or disable a test feature, comment in or out the respective lines in `src/main.c`.
+``` C
+#define __LED_TEST
+#define __UART_TEST
+#define __LCD_TEST
+and so on ...
+```
+The currently available test features are
 - LED Blink
 - UART message transmit
 - UART message receive
