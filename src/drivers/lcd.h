@@ -3,6 +3,14 @@
 
 #include <stdint.h>
 
+#define LCD_PORT GPIOC
+#define LCD_BUS_WIDTH 4
+#define LCD_N 1
+#define LCD_F 0
+#define LCD_PORT GPIOC
+#define LCD_RS_PIN 5
+#define LCD_E_PIN 4
+
 void lcd_init(void);
 void lcd_gpio_init(void);
 void lcd_send_command(uint8_t com);

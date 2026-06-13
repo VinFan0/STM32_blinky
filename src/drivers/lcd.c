@@ -3,14 +3,6 @@
 #include "drivers/io.h"
 #include "common/utils.h"
 
-#define LCD_PORT GPIOC
-#define LCD_BUS_WIDTH 4
-#define LCD_N 1
-#define LCD_F 0
-#define LCD_PORT GPIOC
-#define LCD_RS_PIN 5
-#define LCD_E_PIN 4
-
 /*
  * LCD Init Flowchart:
  *
