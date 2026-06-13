@@ -26,7 +26,7 @@ The string `"Sending test string!\r\n"` is transmitted by USART2 through the vir
 Entering single keys into the same serial terminal in which the test message is sent, will send the keys to the board. The board they echos the keys back out to the serial terminal.
 
 ### LCD Character Display
-Connect a 16x2 character LCD compatible with a HD44780 controller, such as the [QAPASS 1602A](https://www.digikey.com/en/products/detail/midas-displays/MD21605G12W3-BNMLW-VE/13970969?s=N4IgTCBcDaILYBMwEYBsAGArAc2WA7gMwgC6AvkA), to demonstrate the `Blinky` project LCD driver feature. The connections for the LCD are detailed in the diagram below. In addition to the `Hello World!` test message, characters received from the UART are also printed on the second line.
+Connect a 16x2 character LCD compatible with a HD44780 controller, such as the [QAPASS 1602A](https://www.digikey.com/en/products/detail/midas-displays/MD21605G12W3-BNMLW-VE/13970969?s=N4IgTCBcDaILYBMwEYBsAGArAc2WA7gMwgC6AvkA), to demonstrate the `Blinky` project LCD driver feature. The connections for the LCD are detailed in the diagram below. In addition to the `Hello World!` test message, characters received from the UART are also printed on the second line if the UART test feature is also enabled.
 
 ![LCD pin connections to Nucleo-L476RG](docs/lcd_schematic.png)
 
