@@ -3,11 +3,24 @@
 
 #include <stdint.h>
 
+/*
+ * LCD Pins on Nucleo-L476RG dev board
+ * VSS -> GND
+ * VDD -> 5V
+ * V0 -> Pull-down to GND (2.2k ohm)
+ * RS -> PC5
+ * RW -> GND
+ * E -> PC4
+ * D0-D3 -> GND
+ * D4-D7 -> PC0-PC3
+ * A -> 5V
+ * K -> GND
+ */
+
 #define LCD_PORT GPIOC
 #define LCD_BUS_WIDTH 4
 #define LCD_N 1
 #define LCD_F 0
-#define LCD_PORT GPIOC
 #define LCD_RS_PIN 5
 #define LCD_E_PIN 4
 
