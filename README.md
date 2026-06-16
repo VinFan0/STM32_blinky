@@ -15,6 +15,7 @@ The currently available test features are
 - UART message transmit
 - UART message receive
 - LCD character display
+- OLED display (via SPI)
 
 ### LED Blink
 The on-board LD2 LED blinks at a constant rate, determined by the `DELAY_COUNT` macro defined in `src/main.c`.
@@ -26,9 +27,16 @@ The string `"Sending test string!\r\n"` is transmitted by USART2 through the vir
 Entering single keys into the same serial terminal in which the test message is sent, will send the keys to the board. The board they echos the keys back out to the serial terminal.
 
 ### LCD Character Display
-Connect a 16x2 character LCD compatible with a HD44780 controller, such as the [QAPASS 1602A](https://www.digikey.com/en/products/detail/midas-displays/MD21605G12W3-BNMLW-VE/13970969?s=N4IgTCBcDaILYBMwEYBsAGArAc2WA7gMwgC6AvkA), to demonstrate the `Blinky` project LCD driver feature. The connections for the LCD are detailed in the diagram below. In addition to the `Hello World!` test message, characters received from the UART are also printed on the second line if the UART test feature is also enabled.
+Connect a 16x2 character LCD compatible with a HD44780 controller, such as the [QAPASS 1602A](https://www.digikey.com/en/products/detail/midas-displays/MD21605G12W3-BNMLW-VE/13970969?s=N4IgTCBcDaILYBMwEYBsAGArAc2WA7gMwgC6AvkA), to demonstrate the `Blinky` project LCD driver feature. The connections for the LCD are detailed in Figure 1. In addition to the `Hello World!` test message, characters received from the UART are also printed on the second line if the UART test feature is also enabled.
 
 ![LCD pin connections to Nucleo-L476RG](docs/lcd_schematic.png)
+Figure 1. LCD pin connections to Nucleo-L476RG
+
+### OLED Display
+The OLED display test feature uses the SPI1 peripheral of the Nucleo-L476RG board to drive an OLED display. The particular display used in the project is the [Digilent Pmod OLED](https://digilent.com/reference/pmod/pmodoled/start#example_projects), whose primary IC is the [Solomon Systech SSD1306](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf). The Pmod OLED holds a 128x32 resolution. The pin connections for this device can be found in Figure 2. **Note: SPI1 on the Nucleo-L476RG board utilizes PA5 as the SCK pin, conflicting with the onboard LED used in the LED test.** If the OLED display test in enabled, a 64-pixel long line will flash in the center of the display.
+
+![Pmod OLED pin connections to Nucleo-L476RG](docs/pmod_oled_schematic.png)
+Figure 2. Pmod OLED pin connections to Nucleo-L476RG
 
 ## Directory Structure
 The directory structure is based on the [pitchfork layout](https://github.com/vector-of-bool/pitchfork).

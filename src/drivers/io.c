@@ -51,11 +51,11 @@ void io_set_afr(io_port port, uint8_t pin, io_afr afr)
     GPIO_TypeDef *gpio = (GPIO_TypeDef *)(GPIOA_BASE + (GPIOB_BASE - GPIOA_BASE) * port);
 
     if (pin <= 7) {
-        gpio->AFR[0] &= ~(0x15UL << (pin << 2)); // Clear 4 bits of AFRL(pin)
+        gpio->AFR[0] &= ~(0xFUL << (pin << 2)); // Clear 4 bits of AFRL(pin)
         gpio->AFR[0] |= (afr << (pin << 2)); // Set desired afr to AFRL(pin)
     } else if (pin <= 15) {
-        gpio->AFR[1] &= ~(0x15UL << (pin << 2)); // Clear 4 bits of AFRH(pin)
-        gpio->AFR[1] |= (afr << (pin << 2)); // Set desired afr to AFRH(pin)
+        gpio->AFR[1] &= ~(0xFUL << ((pin - 8) << 2)); // Clear 4 bits of AFRH(pin)
+        gpio->AFR[1] |= (afr << ((pin - 8) << 2)); // Set desired afr to AFRH(pin)
     }
 }
 
