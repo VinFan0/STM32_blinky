@@ -11,7 +11,7 @@ static volatile uint32_t rx_tail = 0;
 
 void uart_init(void);
 void uart_send_char(char c);
-void uart_transmit(char *buf);
+void uart_transmit(const char *buf);
 void uart_flush(void);
 int uart_check_input_polling(char *out);
 static inline uint32_t rx_next(uint32_t idx)
@@ -21,4 +21,5 @@ static inline uint32_t rx_next(uint32_t idx)
 int uart_data_available(void);
 char uart_read_char(void);
 void USAR2_IRQHandler(void);
+void uart_print_hex(const char *label, uint32_t val);
 #endif // __UART_H_

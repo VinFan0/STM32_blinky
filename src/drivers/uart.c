@@ -1,5 +1,4 @@
-#include <stdint.h>
-#include "stm32l476xx.h"
+#include <stm32l476xx.h>
 #include "drivers/uart.h"
 #include "drivers/io.h"
 
@@ -69,7 +68,7 @@ void uart_send_char(char c)
     USART2->TDR = c;
 }
 
-void uart_transmit(char *str)
+void uart_transmit(const char *str)
 {
     while (*str) {
         uart_send_char(*str++);
@@ -117,4 +116,20 @@ void USART2_IRQHandler(void)
     if (USART2->ISR & USART_ISR_ORE) {
         USART2->ICR |= USART_ICR_ORECF;
     }
+}
+
+void uart_print_hex(const char *label, uint32_t val)
+{
+    char buf[12];
+    uart_transmit(label);
+    uart_transmit(": 0x");
+
+    for (int i = 7; i >= 0; i--) {
+        uint8_t nibble = (val >> (i << 2)) & 0xF;
+        buf[7 - i] = nibble < 10 ? '0' + nibble : 'A' + nibble - 10;
+    }
+    buf[8] = '\r';
+    buf[9] = '\n';
+    buf[10] = '\0';
+    uart_transmit(buf);
 }
