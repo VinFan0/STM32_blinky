@@ -1,11 +1,12 @@
 # Directories
-ARMGCC_ROOT_DIR = /home/ryan/dev_tools/arm-none-eabi-gcc
+TOOLS_DIR = ${TOOLS_PATH}
+ARMGCC_ROOT_DIR = $(TOOLS_DIR)/arm-none-eabi-gcc
 ARMGCC_BIN_DIR = $(ARMGCC_ROOT_DIR)/bin
 ARMGCC_INCLUDE_DIR = $(ARMGCC_ROOT_DIR)/include/stm32l476x
 BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
 BIN_DIR = $(BUILD_DIR)/bin
-OPENOCD_DIR = /home/ryan/dev_tools/openocd/
+OPENOCD_DIR = $(TOOLS_DIR)/openocd/
 
 LIB_DIRS = $(ARMGCC_INCLUDE_DIR)
 INCLUDE_DIRS = $(ARMGCC_INCLUDE_DIR) \
