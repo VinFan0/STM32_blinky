@@ -66,6 +66,22 @@ on [Arm's website](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolch
 
 There is a _Makefile_ to build the code with _make_ from the command-line.
 
+``` Bash
+TOOLS_PATH=<INSERT TOOLS PATH> make
+```
+
+The path to the toolchain must be specified with the environment variable _TOOLS_PATH_. For example, if the toolchain is available at _/home/ryan/dev\_tools/arm-none-eabi-gcc_:
+
+```
+TOOLS_PATH=$HOME/dev\_tools make
+```
+
+Or for Windows:
+
+```
+TOOLS_PATH="c:/Ryan/dev\_tools" make
+```
+
 ## Tests
 **TODO**
 
