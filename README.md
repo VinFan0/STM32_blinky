@@ -2,6 +2,9 @@
 This repository serves as a starting point for bare-metal C projects. The directory structure,
 build system, guidelines, and other specifics are inspired by the [Embedded System Project Series](https://www.youtube.com/watch?v=g9KbXJydf8I&list=PLS_iNJJVTtiRV0DZRDcTHnvAuDrKGPN40) from [Artful Bytes](artfulbytes.com). The `Blinky` project also serves as an example/test project for the Nucleo-L476RG development board.
 
+### FreeRTOS Variant
+A version of the blinky project utilizing FreeRTOS can be found on the `blinky_FreeRTOS branch`. The regular, "superloop" code is in `blinky_Superloop`.
+
 ## Example and Testing Features
 The project holds the following features, which can be used to verify proper functionality of the board. Not every feature has to be enabled for testing and demonstration. To enable or disable a test feature, comment in or out the respective lines in `src/main.c`.
 ``` C
