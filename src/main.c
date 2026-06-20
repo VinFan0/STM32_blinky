@@ -6,8 +6,13 @@
 #include "common/utils.h"
 #include "drivers/io.h"
 
-/*
- * TEST OPTIONS
+// FreeRTOS includes
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "timers.h"
+
+/* TEST OPTIONS
  * Comment-in any features or peripherals
  * that you want to test. Any combination
  * of features is intended to work together.
@@ -115,4 +120,13 @@ int main(void)
 
         delay_ms(DELAY_COUNT);
     }
+}
+
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+    (void)xTask;
+    (void)pcTaskName;
+    // TODO: Stack overflow detected - halt or log
+    while (1)
+        ;
 }
