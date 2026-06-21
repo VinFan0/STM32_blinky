@@ -12,10 +12,10 @@
  * that you want to test. Any combination
  * of features is intended to work together.
  */
-// #define __LED_TEST
-#define __UART_TEST
+#define __LED_TEST
+// #define __UART_TEST
 // #define __LCD_TEST
-#define __SPI_OLED_TEST
+// #define __SPI_OLED_TEST
 
 #ifdef __LED_TEST
 #include "drivers/led.h"
