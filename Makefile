@@ -6,7 +6,7 @@ ARMGCC_INCLUDE_DIR = $(ARMGCC_ROOT_DIR)/include/stm32l476x
 BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
 BIN_DIR = $(BUILD_DIR)/bin
-OPENOCD_DIR = $(TOOLS_DIR)/openocd/
+OPENOCD_DIR = $(TOOLS_DIR)/openocd/scripts
 
 LIB_DIRS = $(ARMGCC_INCLUDE_DIR)
 INCLUDE_DIRS = $(ARMGCC_INCLUDE_DIR) \
@@ -18,7 +18,7 @@ CC = $(ARMGCC_BIN_DIR)/arm-none-eabi-gcc
 RM = rm
 CPPCHECK = cppcheck
 FORMAT = clang-format
-OOCD = $(OPENOCD_DIR)/bin/openocd
+OOCD = $(OPENOCD_DIR)/../bin/openocd
 
 # Files
 TARGET = $(BIN_DIR)/blink
@@ -26,8 +26,8 @@ STARTUP_SRC = $(ARMGCC_INCLUDE_DIR)/startup_stm32l476rgtx.s
 STARTUP_OBJ = $(OBJ_DIR)/startup_stm32l476rgtx.o
 LINKER = $(ARMGCC_INCLUDE_DIR)/STM32L476RGTx.ld
 
-OPENOCD_IF = $(OPENOCD_DIR)/scripts/interface/stlink.cfg
-OPENOCD_TGT = $(OPENOCD_DIR)/scripts/target/stm32l4x.cfg
+OPENOCD_IF = $(OPENOCD_DIR)/interface/stlink.cfg
+OPENOCD_TGT = $(OPENOCD_DIR)/target/stm32l4x.cfg
 
 SOURCES_WITH_HEADERS = \
 	src/drivers/led.c \
