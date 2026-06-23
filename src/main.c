@@ -60,15 +60,17 @@ static void uart_transmit_task(void *arg)
 int main(void)
 {
 
-#ifdef LED_TEST
+    // clang-format off
+    #ifdef LED_TEST
     led_init();
     xTaskCreate(blink_task, "b", 256, NULL, 1, NULL);
-#endif // LED_TEST
+    #endif // LED_TEST
 
-#ifdef UART_TEST
+    #ifdef UART_TEST
     uart_init();
     xTaskCreate(uart_transmit_task, "b", 256, NULL, 1, NULL);
-#endif // UART_TEST
+    #endif // UART_TEST
+    // clang-format on
 
     /* Enable fault handlers */
     SCB->SHCSR |= SCB_SHCSR_USGFAULTENA_Msk | SCB_SHCSR_BUSFAULTENA_Msk | SCB_SHCSR_MEMFAULTENA_Msk;
@@ -84,7 +86,7 @@ void vApplicationMallocFailedHook(void)
     // TODO: ASSERT(0)
     for (;;) {
         GPIOA->ODR ^= (1U << 5);
-        for (volatile uint32_t d = 0; d < 20000; d++) { }
+        for (volatile uint32_t d = 0; d < 200000; d++) { }
     }
 }
 void vApplicationStackOverflowHook(TaskHandle_t t, char *n)
