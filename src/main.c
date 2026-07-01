@@ -144,4 +144,3 @@ void UsageFault_Handler(void)
         for (volatile uint32_t d = 0; d < 700000; d++) { }
     }
 }
-

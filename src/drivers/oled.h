@@ -35,6 +35,8 @@ void oled_send_command(uint8_t cmd);
 void oled_send_data(uint8_t data);
 void oled_flush(void);
 void oled_clear(void);
-void oled_set_pixel(uint8_t x, uint8_t y, bool on);
+void oled_set_pixel(int16_t x, int16_t y, bool on);
+void oled_draw_rectangle(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y, bool on);
+void oled_draw_circle(int16_t x0, int16_t y0, int16_t radius, bool on);
 
 #endif // __OLED_H_
