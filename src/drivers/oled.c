@@ -229,3 +229,57 @@ void oled_draw_circle(int16_t x0, int16_t y0, int16_t r, bool on)
         oled_set_pixel(x0 - y, y0 - x, on);
     }
 }
+
+void oled_draw_char(int16_t x, int16_t y, unsigned char c, const GFXfont *font, bool on) {
+	if(c < font->first || c > font->last) {
+		return;
+	}
+
+	const GFXglyph *glyph = &font->glyph[c - font->first];
+	const uint8_t *bitmap = font->bitmap;
+
+	uint16_t bo = glyph->bitmapOffset;
+	uint8_t w = glyph->width;
+	uint8_t h = glyph->height;
+	int8_t xo = glyph->xOffset;
+	int8_t yo = glyph->yOffset;
+
+	uint8_t bit = 0;
+	uint8_t byte = 0;
+
+	for(uint8_t yy=0; yy < h; yy++) {
+		for(uint8_t xx = 0; xx < w; xx++) {
+			if(!(bit & 7)) {
+				byte = bitmap[bo++];
+			}
+			bit++;
+
+			if (byte & 0x80) {
+				oled_set_pixel(x + xo + xx, y + yo + yy, on);
+			}
+			byte <<= 1;
+		}
+	}
+}
+
+void oled_draw_string(int16_t x, int16_t y, const char *str, const GFXfont *font, bool on) {
+	int16_t cx = x;
+	int16_t cy = y;
+	
+	while(*str) {
+		char c = *str++;
+
+		if(c == '\n') {
+			cx = x;
+			cy += font->yAdvance;
+			continue;
+		}
+
+		if(c < font->first || c > font->last) {
+			continue;
+		}
+
+		oled_draw_char(cx, cy, c, font, on);
+		cx += font->glyph[c - font->first].xAdvance;
+	}
+}

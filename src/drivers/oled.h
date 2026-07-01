@@ -2,6 +2,7 @@
 #define __OLED_H_
 
 #include <stdint.h>
+#include "app/oled_fonts/gfxfont.h"
 /*
  * Extra pins required to drive PMOD OLED device,
  * in addition to the SPI1 pins.
@@ -39,5 +40,7 @@ void oled_set_pixel(int16_t x, int16_t y, bool on);
 void oled_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, bool on);
 void oled_draw_rectangle(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y, bool on);
 void oled_draw_circle(int16_t x0, int16_t y0, int16_t radius, bool on);
+void oled_draw_char(int16_t x, int16_t y, unsigned char c, const GFXfont *font, bool on);
+void oled_draw_string(int16_t x, int16_t y, const char *str, const GFXfont *font, bool on);
 
 #endif // __OLED_H_
