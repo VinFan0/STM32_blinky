@@ -34,3 +34,8 @@ uint8_t my_strlen(const char *s)
         i++;
     return i;
 }
+
+int16_t abs16(int16_t x)
+{
+    return (x < 0) ? -x : x;
+}

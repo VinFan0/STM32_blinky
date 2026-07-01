@@ -119,12 +119,38 @@ void oled_flush(void)
 void oled_set_pixel(int16_t x, int16_t y, bool on)
 {
     // Each byte covers 8 vertical pixels (one "page")
-    if ((x > 0 && x < 128) && (y > 0 && y < 32)) {
+    if ((x >= 0 && x < 128) && (y >= 0 && y < 32)) {
         int16_t idx = x + ((y >> 3) << 7);
         if (on) {
             oled_buf[idx] |= (1U << (y & 0x7)); // y % 8
         } else {
             oled_buf[idx] &= ~(1U << (y & 0x7));
+        }
+    }
+}
+
+void oled_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, bool on)
+{
+    int16_t dx = abs16(x1 - x0);
+    int16_t dy = abs16(y1 - y0);
+    int16_t sx = (x0 < x1) ? 1 : -1;
+    int16_t sy = (y0 < y1) ? 1 : -1;
+    int16_t err = dx - dy;
+
+    while (1) {
+        oled_set_pixel(x0, y0, on);
+
+        if (x0 == x1 && y0 == y1)
+            break;
+
+        int16_t e2 = err << 1;
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y0 += sy;
         }
     }
 }
