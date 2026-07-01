@@ -283,3 +283,24 @@ void oled_draw_string(int16_t x, int16_t y, const char *str, const GFXfont *font
 		cx += font->glyph[c - font->first].xAdvance;
 	}
 }
+
+void oled_scroll_start(uint8_t start_page, uint8_t end_page, uint8_t frame_interval, bool scroll_left)
+{
+    oled_send_command(scroll_left ? 0x27 : 0x26); // 0x26 = right, 0x27 = left
+    oled_send_command(0x00);              // dummy byte
+    oled_send_command(start_page);        // start page address
+    oled_send_command(frame_interval);    // frame frequency (see datasheet table)
+    oled_send_command(end_page);          // end page address
+    oled_send_command(0x00);              // dummy byte
+    oled_send_command(0xFF);              // dummy byte
+    oled_send_command(0x2F);              // activate scroll (send last)
+}
+
+void oled_scroll_stop(void)
+{
+    oled_send_command(0x2E); // deactivate scroll
+
+    // Datasheet recommends rewriting RAM content after stopping,
+    // since the display pointer can be left in a scrolled state.
+    oled_flush();
+}
