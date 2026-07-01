@@ -55,6 +55,7 @@ static void uart_transmit_task(void *arg)
 #ifdef SPI_OLED_TEST
 #include "drivers/spi1.h"
 #include "drivers/oled.h"
+#include "app/oled_fonts/FreeMono9pt7b.h"
 
 static void oled_task(void *arg)
 {
@@ -94,6 +95,12 @@ int main(void)
     oled_init();
     oled_clear();
     xTaskCreate(oled_task, "b", 256, NULL, 1, NULL);
+
+    oled_draw_string(0, 10, "Hello World!", &FreeMono9pt7b, true);
+    oled_flush();
+    delay_ms(2000);
+    oled_clear();
+    oled_flush();
     #endif // SPI_OLED_TEST
 
     // clang-format on

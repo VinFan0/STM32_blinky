@@ -57,7 +57,7 @@ SOURCES = src/main.c \
 	 $(FREERTOS_SOURCES)
 
 HEADERS = \
-	  $(SOURCES_WITH_HEADERS:.c=.h) \
+	  $(SOURCES_WITH_HEADERS:.c=.h) 
 
 
 OBJECT_NAMES = $(SOURCES:.c=.o)
@@ -67,13 +67,18 @@ OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(OBJECT_NAMES)) $(STARTUP_OBJ)
 # Flags
 MCU = -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard 
 WFLAGS = -Wall -Wextra -Werror -Wshadow 
-CFLAGS = $(MCU) $(WFLAGS) $(addprefix -I, $(INCLUDE_DIRS)) -Og -g -DSTM32L476xx 
+DEPFLAGS = -MMD -MP
+CFLAGS = $(MCU) $(WFLAGS) $(addprefix -I, $(INCLUDE_DIRS)) -Og -g -DSTM32L476xx $(DEPFLAGS)
 LDFLAGS = $(MCU) -T$(LINKER) -nostartfiles -lgcc -lc
 CPPCHECK_FLAGS = --quiet --enable=all --error-exitcode=1 --inline-suppr \
 		 -DSTM32L476xx \
 		 -D__GNUC__ \
 		 --suppress=missingIncludeSystem \
 		 --check-config
+
+DEPS = $(OBJECTS:.o=.d)
+-include $(DEPS)	
+
 CPPCHECK_INCLUDES = $(addprefix -I, \
 		    $(ARMGCC_INCLUDE_DIR) \
 		    ./src \
@@ -81,16 +86,17 @@ CPPCHECK_INCLUDES = $(addprefix -I, \
 		    $(FREERTOS_DIR)/include \
 		    $(FREERTOS_PORT_DIR))
 
+
 # Build
 ## Linking
 $(TARGET): $(OBJECTS) $(HEADERS)
 	@mkdir -p $(dir $@)
-	$(CC) $(LDFLAGS) $^ -o $@
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
 ## Compiling Object Files
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c -o $@ $^ 
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 ## Compiling Startup object
 $(STARTUP_OBJ): $(STARTUP_SRC)
