@@ -36,7 +36,26 @@ Connect a 16x2 character LCD compatible with a HD44780 controller, such as the [
 Figure 1. LCD pin connections to Nucleo-L476RG
 
 ### OLED Display
-The OLED display test feature uses the SPI1 peripheral of the Nucleo-L476RG board to drive an OLED display. The particular display used in the project is the [Digilent Pmod OLED](https://digilent.com/reference/pmod/pmodoled/start#example_projects), whose primary IC is the [Solomon Systech SSD1306](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf). The Pmod OLED holds a 128x32 resolution. The pin connections for this device can be found in Figure 2. **Note: SPI1 on the Nucleo-L476RG board utilizes PA5 as the SCK pin, conflicting with the onboard LED used in the LED test.** If the OLED display test in enabled, a 64-pixel long line will flash in the center of the display.
+The OLED display test feature uses the SPI1 peripheral of the Nucleo-L476RG board to drive an OLED display. The particular display used in the project is the [Digilent Pmod OLED](https://digilent.com/reference/pmod/pmodoled/start#example_projects), whose primary IC is the [Solomon Systech SSD1306](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf). The Pmod OLED holds a 128x32 resolution. The pin connections for this device can be found in Figure 2. **Note: SPI1 on the Nucleo-L476RG board utilizes PA5 as the SCK pin, conflicting with the onboard LED used in the LED test.** If the OLED display test in enabled, a "Hello World!" message will be displayed for 2 seconds on reset, then the oled RTOS task will cycle a pattern of rectangles indefinitely.
+
+**Using a font**
+The project utilizes font files patterned after the Adafruit GFX library. To use a font in the blinky project, the font file, i.e. `FreeMono9pt7b.h` must be placed into the `src/app/oled_fonts` directory. Once there, edit the Adafruit header to use the `gfxfont.h` file provided in the blinky project. The replaced header should look like
+
+``` C
+#pragma once
+#include "gfxfont.h"
+```
+To write text to the oled, first include the font file in `src/main.c`. Then, after initializing the OLED, text can be written with the `oled_draw_char` and `oled_draw_string` functions.
+
+``` C
+#include "drivers/spi1.h"
+#include "drivers/oled.h"
+#include "app/oled_fonts/FreeMono9pt7b.h"
+oled_init();
+oled_draw_char(<x>, <y>, 'A', &FreeMonot9pt7b, true);
+oled_draw_string(<x>, <y>, "Hello World!", &FreeMonot9pt7b, true);
+
+```
 
 ![Pmod OLED pin connections to Nucleo-L476RG](docs/pmod_oled_schematic.png)
 Figure 2. Pmod OLED pin connections to Nucleo-L476RG
