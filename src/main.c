@@ -55,6 +55,26 @@ static void uart_transmit_task(void *arg)
 #ifdef SPI_OLED_TEST
 #include "drivers/spi1.h"
 #include "drivers/oled.h"
+
+static void oled_task(void *arg)
+{
+    (void)arg;
+    for (;;) {
+        for (int i = 0; i <= 8; i++) {
+            oled_draw_line(0 + (i << 1), 0 + (i << 1), 127 - (i << 1), 0 + (i << 1), 1);
+            if (i == 8) {
+                oled_clear();
+                break;
+            }
+            oled_draw_line(0 + (i << 1), 31 - (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
+            oled_draw_line(0 + (i << 1), 0 + (i << 1), 0 + (i << 1), 31 - (i << 1), 1);
+            oled_draw_line(127 - (i << 1), 0 + (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
+            oled_flush();
+            vTaskDelay(500);
+        }
+        oled_flush();
+    }
+}
 #endif // SPI_OLED_TEST
 
 int main(void)
@@ -73,14 +93,7 @@ int main(void)
     #ifdef SPI_OLED_TEST
     oled_init();
     oled_clear();
-
-    // Draw initial shapes
-    //oled_set_pixel(10, 16, 1);
-    //oled_draw_rectangle(32, 10, 64, 20, 1);
-    oled_draw_circle(64, -33, 64, 1);
-    oled_draw_circle(64, 65, 64, 1);
-
-    oled_flush();
+    xTaskCreate(oled_task, "b", 256, NULL, 1, NULL);
     #endif // SPI_OLED_TEST
 
     // clang-format on
