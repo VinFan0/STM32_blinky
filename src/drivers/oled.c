@@ -160,7 +160,7 @@ void oled_draw_rectangle(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y, boo
     // Loop from miny to maxy
     for (int16_t idxy = miny; idxy <= maxy; idxy++) {
         // Loop from minx to maxx
-        for (int16_t  idxx = minx; idxx <= maxx; idxx++) {
+        for (int16_t idxx = minx; idxx <= maxx; idxx++) {
             // Set pixel to <on> state
             oled_set_pixel(idxx, idxy, on);
             // Endloop
