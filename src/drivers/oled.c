@@ -116,13 +116,90 @@ void oled_flush(void)
     SPI1_CS_HIGH();
 }
 
-void oled_set_pixel(uint8_t x, uint8_t y, bool on)
+void oled_set_pixel(int16_t x, int16_t y, bool on)
 {
-    // Each byte covers 8 vertial pixels (one "page")
-    uint16_t idx = x + ((y >> 3) << 7);
-    if (on) {
-        oled_buf[idx] |= (1U << (y & 0x7)); // y % 8
-    } else {
-        oled_buf[idx] &= ~(1U << (y & 0x7));
+    // Each byte covers 8 vertical pixels (one "page")
+    if ((x > 0 && x < 128) && (y > 0 && y < 32)) {
+        int16_t idx = x + ((y >> 3) << 7);
+        if (on) {
+            oled_buf[idx] |= (1U << (y & 0x7)); // y % 8
+        } else {
+            oled_buf[idx] &= ~(1U << (y & 0x7));
+        }
+    }
+}
+
+void oled_draw_rectangle(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y, bool on)
+{
+    int16_t minx = 0;
+    int16_t maxx = 0;
+    int16_t miny = 0;
+    int16_t maxy = 0;
+    // Find min and max x (minx, maxx)
+    if (c1x < c2x) {
+        minx = c1x;
+        maxx = c2x;
+    } else if (c1x > c2x) {
+        minx = c2x;
+        maxx = c1x;
+    } else if (c1x == c2x) {
+        minx = c1x;
+        maxx = minx;
+    }
+    // Find min and max y (miny, maxy)
+    if (c1y < c2y) {
+        miny = c1y;
+        maxy = c2y;
+    } else if (c1y > c2y) {
+        miny = c2y;
+        maxy = c1y;
+    } else if (c1y == c2y) {
+        miny = c1y;
+        maxy = miny;
+    }
+    // Loop from miny to maxy
+    for (int16_t idxy = miny; idxy <= maxy; idxy++) {
+        // Loop from minx to maxx
+        for (int16_t  idxx = minx; idxx <= maxx; idxx++) {
+            // Set pixel to <on> state
+            oled_set_pixel(idxx, idxy, on);
+            // Endloop
+        }
+        // Endloop
+    }
+}
+
+// Bresenham’s Circle Algorithm
+void oled_draw_circle(int16_t x0, int16_t y0, int16_t r, bool on)
+{
+    int8_t f = 1 - r;
+    int8_t ddF_x = 1;
+    int8_t ddF_y = -2 * r;
+    int8_t x = 0;
+    int8_t y = r;
+
+    oled_set_pixel(x0, y0 + r, on);
+    oled_set_pixel(x0, y0 - r, on);
+    oled_set_pixel(x0 + r, y0, on);
+    oled_set_pixel(x0 - r, y0, on);
+
+    while (x < y) {
+        if (f >= 0) {
+            y--;
+            ddF_y += 2;
+            f += ddF_y;
+        }
+        x++;
+        ddF_x += 2;
+        f += ddF_x;
+
+        oled_set_pixel(x0 + x, y0 + y, on);
+        oled_set_pixel(x0 - x, y0 + y, on);
+        oled_set_pixel(x0 + x, y0 - y, on);
+        oled_set_pixel(x0 - x, y0 - y, on);
+        oled_set_pixel(x0 + y, y0 + x, on);
+        oled_set_pixel(x0 - y, y0 + x, on);
+        oled_set_pixel(x0 + y, y0 - x, on);
+        oled_set_pixel(x0 - y, y0 - x, on);
     }
 }
