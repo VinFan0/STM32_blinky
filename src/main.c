@@ -11,10 +11,10 @@
  * that you want to test. Any combination
  * of features is intended to work together.
  */
-#define LED_TEST
-#define UART_TEST
+// #define LED_TEST
+// #define UART_TEST
 // #define LCD_TEST
-// #define SPI_OLED_TEST
+#define SPI_OLED_TEST
 
 /* LED_TEST ****************************************************/
 #ifdef LED_TEST
@@ -59,7 +59,6 @@ static void uart_transmit_task(void *arg)
 
 int main(void)
 {
-
     // clang-format off
     #ifdef LED_TEST
     led_init();
@@ -70,6 +69,20 @@ int main(void)
     uart_init();
     xTaskCreate(uart_transmit_task, "b", 256, NULL, 1, NULL);
     #endif // UART_TEST
+
+    #ifdef SPI_OLED_TEST
+    oled_init();
+    oled_clear();
+
+    // Draw initial shapes
+    //oled_set_pixel(10, 16, 1);
+    //oled_draw_rectangle(32, 10, 64, 20, 1);
+    oled_draw_circle(64, -33, 64, 1);
+    oled_draw_circle(64, 65, 64, 1);
+
+    oled_flush();
+    #endif // SPI_OLED_TEST
+
     // clang-format on
 
     /* Enable fault handlers */
@@ -86,7 +99,7 @@ void vApplicationMallocFailedHook(void)
     // TODO: ASSERT(0)
     for (;;) {
         GPIOA->ODR ^= (1U << 5);
-        for (volatile uint32_t d = 0; d < 200000; d++) { }
+        for (volatile uint32_t d = 0; d < 20000; d++) { }
     }
 }
 void vApplicationStackOverflowHook(TaskHandle_t t, char *n)
@@ -131,3 +144,4 @@ void UsageFault_Handler(void)
         for (volatile uint32_t d = 0; d < 700000; d++) { }
     }
 }
+
