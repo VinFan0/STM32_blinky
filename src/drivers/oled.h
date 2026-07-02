@@ -42,6 +42,8 @@ void oled_draw_rectangle(int16_t c1x, int16_t c1y, int16_t c2x, int16_t c2y, boo
 void oled_draw_circle(int16_t x0, int16_t y0, int16_t radius, bool on);
 void oled_draw_char(int16_t x, int16_t y, unsigned char c, const GFXfont *font, bool on);
 void oled_draw_string(int16_t x, int16_t y, const char *str, const GFXfont *font, bool on);
-void oled_scroll_start(uint8_t start_page, uint8_t end_page, uint8_t frame_interval, bool scroll_left);
+void oled_scroll_start(uint8_t start_page, uint8_t end_page, uint8_t frame_interval,
+                       bool scroll_left);
 void oled_scroll_stop(void);
+void oled_invert(bool inverted);
 #endif // __OLED_H_

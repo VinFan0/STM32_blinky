@@ -60,11 +60,17 @@ static void uart_transmit_task(void *arg)
 static void oled_task(void *arg)
 {
     (void)arg;
+    static bool inverted = 1;
     for (;;) {
         for (int i = 0; i <= 8; i++) {
             oled_draw_line(0 + (i << 1), 0 + (i << 1), 127 - (i << 1), 0 + (i << 1), 1);
             if (i == 8) {
                 oled_clear();
+                if (inverted)
+                    inverted = 0;
+                else
+                    inverted = 1;
+                oled_invert(inverted);
                 break;
             }
             oled_draw_line(0 + (i << 1), 31 - (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
