@@ -2,7 +2,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include <string.h>
-#include <string.h>
 #include "common/utils.h"
 #include "drivers/io.h"
 
@@ -11,12 +10,14 @@
  * that you want to test. Any combination
  * of features is intended to work together.
  */
-// #define LED_TEST
-// #define UART_TEST
-// #define LCD_TEST
-#define SPI_OLED_TEST
+#define LED_TEST
+#define UART_TEST
+#define LCD_TEST
+// #define SPI_OLED_TEST
 
-/* LED_TEST ****************************************************/
+/*****************************************************/
+/* LED_TEST */
+/*****************************************************/
 #ifdef LED_TEST
 #include "drivers/led.h"
 #define LED_PIN 5U
@@ -32,7 +33,9 @@ static void blink_task(void *arg)
 }
 #endif // LED_TEST
 
-/* UART_TEST ***************************************************/
+/*****************************************************/
+/* UART_TEST */
+/*****************************************************/
 #ifdef UART_TEST
 #include "drivers/uart.h"
 
@@ -46,12 +49,30 @@ static void uart_transmit_task(void *arg)
 }
 #endif // UART_TEST
 
-/* LCD_TEST ****************************************************/
+/*****************************************************/
+/* LCD_TEST */
+/*****************************************************/
 #ifdef LCD_TEST
 #include "drivers/lcd.h"
+
+static void lcd_task(void *arg)
+{
+    (void)arg;
+    char *lcd_string = "Journal Tech Inc";
+    for (;;) {
+        lcd_clear_line(1);
+        for (int i = 0; i < (int)strlen(lcd_string); i++) {
+            lcd_send_data(lcd_string[i]);
+            delay_ms(250);
+        }
+        vTaskDelay(1000);
+    }
+}
 #endif // LCD_TEST
 
-/* SPI_OLED_TEST ***********************************************/
+/*****************************************************/
+/* SPI_OLED_TEST */
+/*****************************************************/
 #ifdef SPI_OLED_TEST
 #include "drivers/spi1.h"
 #include "drivers/oled.h"
@@ -88,16 +109,29 @@ int main(void)
 {
     // clang-format off
     #ifdef LED_TEST
+    // *******************************************
     led_init();
     xTaskCreate(blink_task, "b", 256, NULL, 1, NULL);
     #endif // LED_TEST
 
     #ifdef UART_TEST
+    // *******************************************
     uart_init();
     xTaskCreate(uart_transmit_task, "b", 256, NULL, 1, NULL);
     #endif // UART_TEST
 
+    #ifdef LCD_TEST
+    // *******************************************
+    lcd_init();
+    char *lcd_init_string = "Ryan Beck";
+    lcd_transmit_string(lcd_init_string, strlen(lcd_init_string));
+    lcd_set_cursor(1,0);
+    //(void)lcd_task;
+    xTaskCreate(lcd_task, "b", 256, NULL, 1, NULL);
+    #endif // LCD_TEST
+
     #ifdef SPI_OLED_TEST
+    // *******************************************
     oled_init();
     oled_clear();
     xTaskCreate(oled_task, "b", 256, NULL, 1, NULL);

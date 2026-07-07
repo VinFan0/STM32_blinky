@@ -32,5 +32,6 @@ void lcd_put_nibble(char nibble);
 void lcd_pulse(void);
 void lcd_transmit_string(char *str, uint8_t str_len);
 void lcd_set_cursor(uint8_t line, uint8_t col);
+void lcd_clear_line(uint8_t line);
 
 #endif // __LCD_H_

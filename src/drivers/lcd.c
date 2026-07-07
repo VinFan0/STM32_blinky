@@ -62,7 +62,7 @@ void lcd_init(void)
     delay_ms(2);
     lcd_send_command(0x06); // Entry Mode: Increment mode
     delay_ms(1);
-    lcd_send_command(0x0F); // 0b0000_1DCB D: Display on; C: Cursor on; B: Blink on
+    lcd_send_command(0x0E); // 0b0000_1DCB D: Display on; C: Cursor on; B: Blink on
     delay_ms(1);
 }
 
@@ -120,4 +120,13 @@ void lcd_set_cursor(uint8_t line, uint8_t col)
 {
     uint8_t line_offsets[] = { 0x00, 0x40 };
     lcd_send_command(0x80 | (line_offsets[line] + col));
+}
+
+void lcd_clear_line(uint8_t line)
+{
+    lcd_set_cursor(line, 0);
+    for (int i = 0; i < 16; i++) {
+        lcd_send_data(' ');
+    }
+    lcd_set_cursor(line, 0);
 }
