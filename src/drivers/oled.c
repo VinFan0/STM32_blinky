@@ -43,7 +43,7 @@ void oled_init(void)
     oled_send_command(0xDA); // COM pins
     oled_send_command(0x02); // 128x32 COM pin config
     oled_send_command(0x81); // Contrast
-    oled_send_command(0x8F);
+    oled_send_command(0xFF);
     oled_send_command(0xD9); // Pre-charge period
     oled_send_command(0xF1);
     oled_send_command(0xDB); // VCOMH deselect level
