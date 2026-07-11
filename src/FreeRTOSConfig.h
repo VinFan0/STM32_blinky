@@ -40,6 +40,7 @@
 #define configMAX_TASK_NAME_LEN             16
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
 #define configENABLE_BACKWARD_COMPATIBILITY 0
+#define configUSE_STREAM_BUFFERS 	    1
 
 #define configASSERT( x )   if( ( x ) == 0 ) { __asm volatile("bkpt #0"); for(;;){} }
 
