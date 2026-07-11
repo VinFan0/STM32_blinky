@@ -32,6 +32,8 @@ STARTUP_SRC = $(ARMGCC_INCLUDE_DIR)/startup_stm32l476rgtx.s
 STARTUP_OBJ = $(OBJ_DIR)/startup_stm32l476rgtx.o
 LINKER = $(ARMGCC_INCLUDE_DIR)/STM32L476RGTx.ld
 
+.DEFAULT_GOAL := $(TARGET)
+
 OPENOCD_IF = $(OPENOCD_DIR)/interface/stlink.cfg
 OPENOCD_TGT = $(OPENOCD_DIR)/target/stm32l4x.cfg
 
@@ -40,6 +42,7 @@ FREERTOS_SOURCES = \
 		   $(FREERTOS_DIR)/queue.c \
 		   $(FREERTOS_DIR)/list.c \
 		   $(FREERTOS_DIR)/timers.c \
+		   $(FREERTOS_DIR)/stream_buffer.c \
 		   $(FREERTOS_PORT_DIR)/port.c \
 		   $(FREERTOS_HEAP_DIR)/heap_4.c
 

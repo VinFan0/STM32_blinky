@@ -10,10 +10,10 @@
  * that you want to test. Any combination
  * of features is intended to work together.
  */
-// #define LED_TEST
+#define LED_TEST
 #define UART_TEST
-#define LCD_TEST
-#define SPI_OLED_TEST
+// #define LCD_TEST
+// #define SPI_OLED_TEST
 
 /*****************************************************/
 /* LED_TEST */
@@ -38,15 +38,6 @@ static void blink_task(void *arg)
 /*****************************************************/
 #ifdef UART_TEST
 #include "drivers/uart.h"
-
-static void uart_transmit_task(void *arg)
-{
-    (void)arg;
-    for (;;) {
-        uart_transmit("Sending test string!\r\n");
-        vTaskDelay(1000);
-    }
-}
 #endif // UART_TEST
 
 /*****************************************************/
@@ -117,7 +108,7 @@ int main(void)
     #ifdef UART_TEST
     // *******************************************
     uart_init();
-    xTaskCreate(uart_transmit_task, "b", 256, NULL, 1, NULL);
+    uart_start_tasks();
     #endif // UART_TEST
 
     #ifdef LCD_TEST

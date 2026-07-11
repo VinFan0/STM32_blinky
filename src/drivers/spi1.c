@@ -60,9 +60,9 @@ void spi1_debug(void)
     uint32_t afrl_a = GPIOA->AFR[0];
 
     for (int i = 0; i < 10; i++)
-        uart_send_char('*');
-    uart_send_char('\r');
-    uart_send_char('\n');
+        uart_send_char_polling('*');
+    uart_send_char_polling('\r');
+    uart_send_char_polling('\n');
 
     uart_print_hex("RCC_APB2ENR", rcc_apb2);
     uart_print_hex("SPI1_CR1    ", cr1);
