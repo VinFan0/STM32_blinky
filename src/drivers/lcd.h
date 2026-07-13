@@ -24,6 +24,7 @@
 #define LCD_RS_PIN 5
 #define LCD_E_PIN 4
 
+void lcd_create_tasks(void);
 void lcd_init(void);
 void lcd_gpio_init(void);
 void lcd_send_command(uint8_t com);

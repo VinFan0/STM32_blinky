@@ -1,7 +1,33 @@
+#include <string.h>
 #include "stm32l476xx.h"
 #include "drivers/lcd.h"
 #include "drivers/io.h"
 #include "common/utils.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+/****************************************************/
+/* FreeRTOS					    */
+/****************************************************/
+
+static void lcd_task(void *arg)
+{
+    (void)arg;
+    char *lcd_string = "Journal Tech Inc";
+    for (;;) {
+        lcd_clear_line(1);
+        for (int i = 0; i < (int)strlen(lcd_string); i++) {
+            lcd_send_data(lcd_string[i]);
+            delay_ms(250);
+        }
+        vTaskDelay(1000);
+    }
+}
+
+void lcd_create_tasks(void)
+{
+    xTaskCreate(lcd_task, "lcd", 256, NULL, 1, NULL);
+}
 
 /*
  * LCD Init Flowchart:

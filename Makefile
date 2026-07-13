@@ -53,7 +53,8 @@ SOURCES_WITH_HEADERS = \
 	src/drivers/uart.c \
 	src/drivers/lcd.c \
 	src/drivers/spi1.c \
-	src/drivers/oled.c
+	src/drivers/oled.c \
+	src/app/handlers.c
 	
 SOURCES = src/main.c \
 	 $(SOURCES_WITH_HEADERS) \

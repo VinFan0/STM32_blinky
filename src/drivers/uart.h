@@ -3,16 +3,12 @@
 
 #include <stdint.h>
 
-#define RX_BUF_SIZE 64
-static inline uint32_t rx_next(uint32_t idx)
-{
-    return (idx + 1) % RX_BUF_SIZE;
-}
+// FreeRTOS
+void uart_create_tasks(void);
 
-void uart_start_tasks(void);
+// Standard UART
 void uart_init(void);
 void uart_send_char_polling(char c);
-void uart_send_char_interrupt(char c);
 void uart_transmit(const char *buf);
 void uart_flush(void);
 int uart_check_input_polling(char *out);

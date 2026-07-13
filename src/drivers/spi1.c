@@ -2,6 +2,23 @@
 #include "drivers/spi1.h"
 #include "drivers/io.h"
 #include "drivers/uart.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "stream_buffer.h"
+#include "semphr.h"
+
+/*
+ * +1 so a full 512-byte oled_buf flush fits in one shot without the
+ * sending task ever having to block waiting for the ISR to drain it.
+ * (A stream buffer of size N only holds N-1 usable bytes.)
+ */
+#define SPI1_TX_STREAM_SIZE 513
+#define SPI1_TX_TRIGGER_LEVEL 1
+
+static StreamBufferHandle_t spi1TxStream;
+static SemaphoreHandle_t spi1TxDoneSem; // given by ISR once stream is drained
+static SemaphoreHandle_t spi1TxMutex; // serializes concurrent callers
+static volatile size_t spi1TxRemaining;
 
 void spi1_init(void)
 {
@@ -48,6 +65,18 @@ void spi1_init(void)
 	        | SPI_CR1_CPHA			// Clock phase 1: second clock transition is first date capture edge
 		| SPI_CR1_SPE;
     // clang-format on
+
+    spi1TxStream = xStreamBufferCreate(SPI1_TX_STREAM_SIZE, SPI1_TX_TRIGGER_LEVEL);
+    spi1TxDoneSem = xSemaphoreCreateBinary();
+    spi1TxMutex = xSemaphoreCreateMutex();
+
+    /*
+     * Priority must be numerically >= configMAX_SYSCALL_INTERRUPT_PRIORITY
+     * (i.e. logically "at or below" that threshold) since the handler calls
+     * FreeRTOS ...FromISR() APIs.
+     */
+    NVIC_SetPriority(SPI1_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY);
+    NVIC_EnableIRQ(SPI1_IRQn);
 }
 
 void spi1_debug(void)
@@ -80,3 +109,63 @@ void spi1_send(uint8_t data)
         while (SPI1->SR & SPI_SR_BSY);		// Wait for busy flag reset (TX finished)
         // clang-format on    
 }
+
+/*
+ * Streams `len` bytes out over SPI1 via the TXE interrupt, without the
+ * calling task busy-polling the peripheral for the whole transfer.
+ * Blocks (sleeps) the calling task until every byte has been clocked out.
+ * Caller is still responsible for CS/DC around this call.
+ */
+void spi1_send_stream(const uint8_t *data, size_t len)
+{
+    if (len == 0)
+        return;
+
+    xSemaphoreTake(spi1TxMutex, portMAX_DELAY);
+
+    spi1TxRemaining = len;
+
+    size_t sent = 0;
+    while (sent < len) {
+        sent += xStreamBufferSend(spi1TxStream, data + sent, len - sent, portMAX_DELAY);
+    }
+
+    // Kick off transmission
+    SPI1->CR2 |= SPI_CR2_TXEIE;
+
+    // Sleep until the ISR has pulled the last byte out of the stream buffer
+    xSemaphoreTake(spi1TxDoneSem, portMAX_DELAY);
+
+    // The last byte is still shifting out of the SPI shift register at this
+    // point (TXE fires when DR is empty, not when the byte is fully sent).
+    // This is a single-byte-length wait, not a whole-buffer one.
+    while (SPI1->SR & SPI_SR_BSY);
+
+    xSemaphoreGive(spi1TxMutex);
+}
+
+void SPI1_IRQHandler(void)
+{
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    if (SPI1->SR & SPI_SR_TXE) {
+        uint8_t byte;
+        size_t received = xStreamBufferReceiveFromISR(
+            spi1TxStream, &byte, 1, &xHigherPriorityTaskWoken);
+
+        if (received == 1) {
+            *((volatile uint8_t *)&SPI1->DR) = byte;
+            spi1TxRemaining--;
+            if (spi1TxRemaining == 0) {
+                SPI1->CR2 &= ~SPI_CR2_TXEIE;
+                xSemaphoreGiveFromISR(spi1TxDoneSem, &xHigherPriorityTaskWoken);
+            }
+        } else {
+            // Nothing queued right now — stop interrupting until more is sent.
+            SPI1->CR2 &= ~SPI_CR2_TXEIE;
+        }
+    }
+
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+}
+

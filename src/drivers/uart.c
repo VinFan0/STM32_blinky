@@ -13,17 +13,20 @@
  * Both AF7
  */
 
+#define RX_BUF_SIZE 64
 static char rx_buf[RX_BUF_SIZE];
 static uint32_t rx_head = 0;
 static uint32_t rx_tail = 0;
+static inline uint32_t rx_next(uint32_t idx)
+{
+    return (idx + 1) % RX_BUF_SIZE;
+}
 
 // **************************************************
 // RTOS Tasks and variables
 // **************************************************
 static StreamBufferHandle_t uartTxStream;
 static SemaphoreHandle_t uartRxSem;
-// static TaskHandle_t uartRxTaskHandle;
-static TaskHandle_t uartTxTaskHandle;
 
 static void uart_tx_task(void *arg)
 {
@@ -34,22 +37,9 @@ static void uart_tx_task(void *arg)
     }
 }
 
-static void uart_rx_task(void *arg)
+void uart_create_tasks(void)
 {
-    (void)arg;
-    for (;;) {
-        xSemaphoreTake(uartRxSem, portMAX_DELAY);
-        while (uart_data_available()) {
-            char c = uart_read_char();
-            uart_send_char_polling(c);
-        }
-    }
-}
-
-void uart_start_tasks(void)
-{
-    (void)uart_rx_task; // xTaskCreate(uart_rx_task, "uart_rx", 256, NULL, 2, &uartRxTaskHandle);
-    xTaskCreate(uart_tx_task, "uart_tx", 256, NULL, 2, &uartTxTaskHandle);
+    xTaskCreate(uart_tx_task, "uart_tx", 256, NULL, 2, NULL);
 }
 
 /* USART2 Init Workflow

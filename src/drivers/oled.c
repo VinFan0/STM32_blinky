@@ -4,8 +4,41 @@
 #include "io.h"
 #include "common/utils.h"
 #include "drivers/spi1.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 uint8_t oled_buf[512];
+
+static void oled_task(void *arg)
+{
+    (void)arg;
+    static bool inverted = 1;
+    for (;;) {
+        for (int i = 0; i <= 8; i++) {
+            oled_draw_line(0 + (i << 1), 0 + (i << 1), 127 - (i << 1), 0 + (i << 1), 1);
+            if (i == 8) {
+                oled_clear();
+                if (inverted)
+                    inverted = 0;
+                else
+                    inverted = 1;
+                oled_invert(inverted);
+                break;
+            }
+            oled_draw_line(0 + (i << 1), 31 - (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
+            oled_draw_line(0 + (i << 1), 0 + (i << 1), 0 + (i << 1), 31 - (i << 1), 1);
+            oled_draw_line(127 - (i << 1), 0 + (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
+            oled_flush();
+            vTaskDelay(500);
+        }
+        oled_flush();
+    }
+}
+
+void oled_create_tasks(void)
+{
+    xTaskCreate(oled_task, "oled", 256, NULL, 1, NULL);
+}
 
 void oled_init(void)
 {
@@ -110,9 +143,7 @@ void oled_flush(void)
 
     SPI1_DC_DAT();
     SPI1_CS_LOW();
-    for (uint16_t i = 0; i < sizeof(oled_buf); i++) {
-        spi1_send(oled_buf[i]);
-    }
+    spi1_send_stream(oled_buf, sizeof(oled_buf));
     SPI1_CS_HIGH();
 }
 

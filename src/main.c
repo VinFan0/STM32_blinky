@@ -20,17 +20,6 @@
 /*****************************************************/
 #ifdef LED_TEST
 #include "drivers/led.h"
-#define LED_PIN 5U
-
-static void blink_task(void *arg)
-{
-    (void)arg;
-    /* Direct register access — no clock_init needed, GPIOA already enabled */
-    for (;;) {
-        GPIOA->ODR ^= (1U << LED_PIN);
-        vTaskDelay(250);
-    }
-}
 #endif // LED_TEST
 
 /*****************************************************/
@@ -45,20 +34,6 @@ static void blink_task(void *arg)
 /*****************************************************/
 #ifdef LCD_TEST
 #include "drivers/lcd.h"
-
-static void lcd_task(void *arg)
-{
-    (void)arg;
-    char *lcd_string = "Journal Tech Inc";
-    for (;;) {
-        lcd_clear_line(1);
-        for (int i = 0; i < (int)strlen(lcd_string); i++) {
-            lcd_send_data(lcd_string[i]);
-            delay_ms(250);
-        }
-        vTaskDelay(1000);
-    }
-}
 #endif // LCD_TEST
 
 /*****************************************************/
@@ -68,32 +43,6 @@ static void lcd_task(void *arg)
 #include "drivers/spi1.h"
 #include "drivers/oled.h"
 #include "app/oled_fonts/FreeMono9pt7b.h"
-
-static void oled_task(void *arg)
-{
-    (void)arg;
-    static bool inverted = 1;
-    for (;;) {
-        for (int i = 0; i <= 8; i++) {
-            oled_draw_line(0 + (i << 1), 0 + (i << 1), 127 - (i << 1), 0 + (i << 1), 1);
-            if (i == 8) {
-                oled_clear();
-                if (inverted)
-                    inverted = 0;
-                else
-                    inverted = 1;
-                oled_invert(inverted);
-                break;
-            }
-            oled_draw_line(0 + (i << 1), 31 - (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
-            oled_draw_line(0 + (i << 1), 0 + (i << 1), 0 + (i << 1), 31 - (i << 1), 1);
-            oled_draw_line(127 - (i << 1), 0 + (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
-            oled_flush();
-            vTaskDelay(500);
-        }
-        oled_flush();
-    }
-}
 #endif // SPI_OLED_TEST
 
 int main(void)
@@ -102,31 +51,32 @@ int main(void)
     #ifdef LED_TEST
     // *******************************************
     led_init();
-    xTaskCreate(blink_task, "b", 256, NULL, 1, NULL);
+    led_create_tasks();
     #endif // LED_TEST
 
     #ifdef UART_TEST
     // *******************************************
     uart_init();
-    uart_start_tasks();
+    uart_create_tasks();
     #endif // UART_TEST
 
     #ifdef LCD_TEST
     // *******************************************
     lcd_init();
+    lcd_create_tasks();
+    
+    // Initial LCD write
     char *lcd_init_string = "Ryan Beck";
     lcd_transmit_string(lcd_init_string, strlen(lcd_init_string));
     lcd_set_cursor(1,0);
-    //(void)lcd_task;
-    xTaskCreate(lcd_task, "b", 256, NULL, 1, NULL);
     #endif // LCD_TEST
 
     #ifdef SPI_OLED_TEST
     // *******************************************
     oled_init();
-    oled_clear();
-    xTaskCreate(oled_task, "b", 256, NULL, 1, NULL);
+    oled_create_tasks();
 
+    // Initial OLED write
     oled_draw_string(0, 10, "Hello World!", &FreeMono9pt7b, true);
     oled_flush();
     delay_ms(2000);
@@ -141,57 +91,4 @@ int main(void)
 
     vTaskStartScheduler();
     for (;;) { }
-}
-
-void vApplicationIdleHook(void) { } // IDLE TASK
-
-void vApplicationMallocFailedHook(void)
-{
-    // TODO: ASSERT(0)
-    for (;;) {
-        GPIOA->ODR ^= (1U << 5);
-        for (volatile uint32_t d = 0; d < 20000; d++) { }
-    }
-}
-void vApplicationStackOverflowHook(TaskHandle_t t, char *n)
-{
-    (void)t;
-    (void)n;
-    // TODO: ASSERT(0)
-    for (;;) {
-        GPIOA->ODR ^= (1U << 5);
-        for (volatile uint32_t d = 0; d < 300000; d++) { }
-    }
-}
-void HardFault_Handler(void)
-{
-    // TODO: ASSERT(0)
-    for (;;) {
-        GPIOA->ODR ^= (1U << 5);
-        for (volatile uint32_t d = 0; d < 400000; d++) { }
-    }
-}
-void MemManage_Handler(void)
-{
-    // TODO: ASSERT(0)
-    for (;;) {
-        GPIOA->ODR ^= (1U << 5);
-        for (volatile uint32_t d = 0; d < 500000; d++) { }
-    }
-}
-void BusFault_Handler(void)
-{
-    // TODO: ASSERT(0)
-    for (;;) {
-        GPIOA->ODR ^= (1U << 5);
-        for (volatile uint32_t d = 0; d < 600000; d++) { }
-    }
-}
-void UsageFault_Handler(void)
-{
-    // TODO: ASSERT(0)
-    for (;;) {
-        GPIOA->ODR ^= (1U << 5);
-        for (volatile uint32_t d = 0; d < 700000; d++) { }
-    }
 }
