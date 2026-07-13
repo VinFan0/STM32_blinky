@@ -22,7 +22,7 @@ static uint32_t rx_tail = 0;
 // **************************************************
 static StreamBufferHandle_t uartTxStream;
 static SemaphoreHandle_t uartRxSem;
-//static TaskHandle_t uartRxTaskHandle;
+// static TaskHandle_t uartRxTaskHandle;
 static TaskHandle_t uartTxTaskHandle;
 
 static void uart_tx_task(void *arg)
@@ -41,14 +41,14 @@ static void uart_rx_task(void *arg)
         xSemaphoreTake(uartRxSem, portMAX_DELAY);
         while (uart_data_available()) {
             char c = uart_read_char();
-	    uart_send_char_polling(c);
+            uart_send_char_polling(c);
         }
     }
 }
 
 void uart_start_tasks(void)
 {
-    (void) uart_rx_task; //xTaskCreate(uart_rx_task, "uart_rx", 256, NULL, 2, &uartRxTaskHandle);
+    (void)uart_rx_task; // xTaskCreate(uart_rx_task, "uart_rx", 256, NULL, 2, &uartRxTaskHandle);
     xTaskCreate(uart_tx_task, "uart_tx", 256, NULL, 2, &uartTxTaskHandle);
 }
 
@@ -184,10 +184,10 @@ void USART2_IRQHandler(void)
             rx_head = next;
         }
         xSemaphoreGiveFromISR(uartRxSem, &xHigherPriorityTaskWoken); // Give up RX semaphore
-	
-	xStreamBufferSendFromISR(uartTxStream, &c, 1, &xHigherPriorityTaskWoken);
-	xStreamBufferSendFromISR(uartTxStream, "\r\n", 2, &xHigherPriorityTaskWoken);
-	USART2->CR1 |= USART_CR1_TXEIE;
+
+        xStreamBufferSendFromISR(uartTxStream, &c, 1, &xHigherPriorityTaskWoken);
+        xStreamBufferSendFromISR(uartTxStream, "\r\n", 2, &xHigherPriorityTaskWoken);
+        USART2->CR1 |= USART_CR1_TXEIE;
     }
 
     // OverRun Error Interrupt
