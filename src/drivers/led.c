@@ -2,6 +2,25 @@
 #include "stm32l476xx.h"
 #include "drivers/led.h"
 #include "drivers/io.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+#define LED_PIN 5U
+
+static void blink_task(void *arg)
+{
+    (void)arg;
+    /* Direct register access — no clock_init needed, GPIOA already enabled */
+    for (;;) {
+        GPIOA->ODR ^= (1U << LED_PIN);
+        vTaskDelay(250);
+    }
+}
+
+void led_create_tasks(void)
+{
+    xTaskCreate(blink_task, "blink", 256, NULL, 1, NULL);
+}
 
 void led_init(void)
 {

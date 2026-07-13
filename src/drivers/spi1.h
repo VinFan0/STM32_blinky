@@ -2,7 +2,7 @@
 #define __SPI1_H_
 
 #include <stdint.h>
-
+#include <stddef.h>
 /*
  * SPI1 Pins on Nucleo-L476RG board
  * CS 	-> PB6
@@ -33,6 +33,7 @@
 
 void spi1_init(void);
 void spi1_send(uint8_t data);
+void spi1_send_stream(const uint8_t *data, size_t len);
 void spi1_debug(void);
 
 #endif // __SPI1_H_

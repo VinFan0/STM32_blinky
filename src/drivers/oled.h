@@ -30,6 +30,7 @@
 
 extern uint8_t oled_buf[512];
 
+void oled_create_tasks(void);
 void oled_init(void);
 void oled_gpio_init(void);
 void oled_send_command(uint8_t cmd);
