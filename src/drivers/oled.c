@@ -28,10 +28,10 @@ static void oled_task(void *arg)
             oled_draw_line(0 + (i << 1), 31 - (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
             oled_draw_line(0 + (i << 1), 0 + (i << 1), 0 + (i << 1), 31 - (i << 1), 1);
             oled_draw_line(127 - (i << 1), 0 + (i << 1), 127 - (i << 1), 31 - (i << 1), 1);
-            oled_flush();
+            oled_flush_fromtask();
             vTaskDelay(500);
         }
-        oled_flush();
+        oled_flush_fromtask();
     }
 }
 
@@ -133,6 +133,23 @@ void oled_clear(void)
 }
 
 void oled_flush(void)
+{
+    oled_send_command(0x21);
+    oled_send_command(0x00);
+    oled_send_command(0x7F);
+    oled_send_command(0x22);
+    oled_send_command(0x00);
+    oled_send_command(0x03);
+
+    SPI1_DC_DAT();
+    SPI1_CS_LOW();
+    for(uint16_t i=0; i<sizeof(oled_buf); i++) {
+    	spi1_send(oled_buf[i]);
+    }
+    SPI1_CS_HIGH();
+}
+
+void oled_flush_fromtask(void)
 {
     oled_send_command(0x21);
     oled_send_command(0x00);
@@ -336,7 +353,7 @@ void oled_scroll_stop(void)
 
     // Datasheet recommends rewriting RAM content after stopping,
     // since the display pointer can be left in a scrolled state.
-    oled_flush();
+    oled_flush_fromtask();
 }
 
 void oled_invert(bool inverted)
