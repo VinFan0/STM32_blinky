@@ -10,10 +10,10 @@
  * that you want to test. Any combination
  * of features is intended to work together.
  */
-#define LED_TEST
+// #define LED_TEST
 #define UART_TEST
 // #define LCD_TEST
-// #define SPI_OLED_TEST
+#define SPI_OLED_TEST
 
 /*****************************************************/
 /* LED_TEST */

@@ -75,7 +75,7 @@ void spi1_init(void)
      * (i.e. logically "at or below" that threshold) since the handler calls
      * FreeRTOS ...FromISR() APIs.
      */
-    NVIC_SetPriority(SPI1_IRQn, configMAX_SYSCALL_INTERRUPT_PRIORITY);
+    NVIC_SetPriority(SPI1_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
     NVIC_EnableIRQ(SPI1_IRQn);
 }
 

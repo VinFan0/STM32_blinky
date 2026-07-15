@@ -36,6 +36,7 @@ void oled_gpio_init(void);
 void oled_send_command(uint8_t cmd);
 void oled_send_data(uint8_t data);
 void oled_flush(void);
+void oled_flush_fromtask(void);
 void oled_clear(void);
 void oled_set_pixel(int16_t x, int16_t y, bool on);
 void oled_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, bool on);
